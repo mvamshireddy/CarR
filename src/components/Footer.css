@@ -1,24 +1,26 @@
+/* General Footer Styling */
 .footer {
   background-color: #0f172a; /* Dark navy background */
   color: white;
   padding: 40px 20px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
 .footer-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Four equal sections */
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap; /* Allow sections to wrap like "how it works" */
+  gap: 20px; /* Space between sections */
+  justify-content: space-between; /* Distribute sections evenly */
   max-width: 1200px;
   margin: 0 auto;
 }
 
 .footer-section {
-  display: flex;
-  flex-direction: column;
+  flex: 1 1 calc(25% - 20px); /* Responsive sections with 4 columns on large screens */
+  min-width: 200px; /* Minimum width for each section */
 }
 
 .footer-heading {
@@ -91,12 +93,12 @@
   border-top: 1px solid #374151; /* Subtle border */
   margin-top: 30px;
   padding-top: 20px;
-  padding-bottom: 30px;
   display: flex;
-  justify-content: space-between; /* Make copyright and links horizontal */
+  justify-content: space-between;
   align-items: center;
   font-size: 0.8rem;
   color: #cbd5e1; /* Light gray */
+  flex-wrap: wrap;
 }
 
 .footer-bottom p {
@@ -121,25 +123,26 @@
   color: #facc15; /* Yellow on hover */
 }
 
-/* Remove extra white space at the bottom */
- body {
-  margin: 0;
-  padding: 0;
-  height: 100%; /* Ensure full height for body and html */
+/* Responsive Design for Footer */
+@media (max-width: 1024px) {
+  .footer-section {
+    flex: 1 1 calc(50% - 20px); /* Two columns on medium screens */
+  }
 }
 
-body {
-  display: flex;
-  flex-direction: column;
-  background-color: #0f172a; /* Match footer's background color */
-}
+@media (max-width: 768px) {
+  .footer-section {
+    flex: 1 1 100%; /* Single column on small screens */
+  }
 
-#root {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
+  .footer-bottom {
+    flex-direction: column; /* Stack copyright and links vertically */
+    gap: 10px; /* Add spacing between items */
+    text-align: center; /* Center-align for small screens */
+  }
 
-.footer {
-  flex-shrink: 0; /* Prevent footer from collapsing */
+  .footer-bottom-links {
+    flex-direction: column; /* Stack links vertically */
+    gap: 10px;
+  }
 }

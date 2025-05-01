@@ -1,0 +1,180 @@
+/* General Page Styling */
+.services-page {
+  padding: 0;
+  background-color: #f8f9fa; /* Light gray background */
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  width: 100%;
+  margin: 0;
+}
+
+/* Title Section */
+.services-header {
+  text-align: center;
+  margin: 0;
+  background-color: #0f172a; /* Dark navy background */
+  color: white;
+  padding: 100px 20px;
+  width: 100%; /* Changed from 100vw to 100% */
+  box-sizing: border-box;
+}
+
+.services-header h1 {
+  font-size: 2.8rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.services-header p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Services List */
+.services-list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Service Container */
+.service-container {
+  display: flex;
+  align-items: stretch; /* Ensure both cards (image and info) are the same height */
+  gap: 20px;
+}
+
+.service-container.image-left .service-image-card {
+  order: 1;
+}
+
+.service-container.image-left .service-info-card {
+  order: 2;
+}
+
+.service-container.image-right .service-image-card {
+  order: 2;
+}
+
+.service-container.image-right .service-info-card {
+  order: 1;
+}
+
+/* Image Card */
+.service-image-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-image {
+  width: 100%;
+  height: 100%; /* Ensures the image matches the size of the info card */
+  background-color: #e0e0e0; /* Light gray placeholder */
+  border-radius: 5px;
+}
+
+/* Info Card */
+.service-info-card {
+  flex: 2;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+}
+
+.service-info-card h2 {
+  font-size: 1.8rem;
+  color: #0f172a; /* Dark navy text */
+  margin-bottom: 10px;
+}
+
+.service-info-card p {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.service-info-card ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0 0 20px;
+}
+
+.service-info-card ul li {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.service-info-card ul li::before {
+  content: '✔';
+  color: #f59e0b; /* Golden color */
+  margin-right: 8px;
+  font-weight: bold;
+}
+
+/* Button Styling */
+.service-button {
+  background-color: #0f172a; /* Dark navy */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.service-button:hover {
+  background-color: #1e293b; /* Slightly lighter navy */
+}
+
+/* Footer */
+.services-footer {
+  text-align: center;
+  background-color: #0f172a; /* Dark navy background */
+  color: white;
+  padding: 20px;
+  font-size: 0.9rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .service-container {
+    flex-direction: column; /* Stack image and info vertically */
+  }
+
+  .service-image-card,
+  .service-info-card {
+    width: 100%; /* Full width for both cards */
+  }
+
+  .service-image {
+    width: 100%; /* Full width for the image placeholder */
+    height: auto; /* Adjust height dynamically */
+  }
+
+  .service-info-card {
+    padding: 15px; /* Reduce padding for smaller screens */
+  }
+
+  .service-info-card h2 {
+    font-size: 1.5rem; /* Smaller font size for titles */
+  }
+
+  .service-info-card p {
+    font-size: 0.95rem; /* Smaller font size for descriptions */
+  }
+
+  .service-info-card ul li {
+    font-size: 0.85rem; /* Smaller font size for list items */
+  }
+}

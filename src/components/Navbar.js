@@ -16,9 +16,12 @@ const Navbar = () => {
       <div className="navbar-container">
         {/* Logo */}
         <div className="navbar-logo">
-          <h1>
-            Shadow <span className="highlight">Drive</span>
-          </h1>
+          {/* Logo wrapped in Link for navigation */}
+          <Link to="/" className="logo-link">
+            <h1>
+              Shadow <span className="highlight">Drive</span>
+            </h1>
+          </Link>
         </div>
 
         {/* Desktop Navigation Links */}

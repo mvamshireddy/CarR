@@ -1,7 +1,7 @@
 /* Navbar General Styling */
 .navbar {
   background-color: rgba(15, 23, 42, 0.8); /* Dark navy with 80% opacity */
-  padding: 5px 15px; /* Reduced padding for smaller height */
+  padding: 3px 15px; /* Reduced padding for smaller height */
   color: white; /* White text */
   position: fixed;
   top: 0;

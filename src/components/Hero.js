@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; 
 import './Hero.css';
 
 const Hero = () => {
@@ -12,8 +13,12 @@ const Hero = () => {
           Experience executive-class transportation with our premium fleet of vehicles and professional drivers. Your journey deserves nothing less than exceptional.
         </p>
         <div className="hero-buttons">
-          <button className="btn-primary">Book Your Ride</button>
-          <button className="btn-secondary">Explore Our Fleet</button>
+          {/* Button to redirect to booking page */}
+          <Link to="/booknow" className="btn-primary">Book Your Ride</Link>
+          {/* Button to redirect to Our Vehicles page */}
+        <Link to="/vehicles" className="btn-secondary">
+          Explore Our Fleet
+        </Link>
         </div>
       </div>
       <div className="hero-features">

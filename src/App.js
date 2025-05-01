@@ -6,6 +6,7 @@ import About from './pages/About';
 import Services from './pages/Services';
 import Vehicles from './pages/Vehicles';
 import Contact from './pages/Contact';
+import BookNow from './pages/BookNow'; // Import BookNow page
 
 function App() {
   return (
@@ -17,9 +18,9 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/booknow" element={<BookNow />} /> {/* Add BookNow route */}
       </Routes>
     </Router>
   );
 }
-
 export default App;

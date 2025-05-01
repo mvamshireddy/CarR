@@ -1,0 +1,145 @@
+.footer {
+  background-color: #0f172a; /* Dark navy background */
+  color: white;
+  padding: 40px 20px;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.footer-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Four equal sections */
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-heading {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.footer-description {
+  margin-bottom: 20px;
+  color: #cbd5e1; /* Light gray */
+}
+
+.footer-social {
+  display: flex;
+  gap: 10px;
+}
+
+.social-icon {
+  font-size: 1.2rem;
+  color: white;
+  transition: color 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.social-icon:hover {
+  color: #facc15; /* Yellow on hover */
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.footer-links a:hover {
+  color: #facc15; /* Yellow on hover */
+}
+
+.footer-contact {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-contact li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  color: #cbd5e1; /* Light gray */
+}
+
+.contact-icon {
+  margin-right: 10px;
+  font-size: 1.2rem;
+  color: #facc15; /* Yellow for icons */
+}
+
+.footer-bottom {
+  border-top: 1px solid #374151; /* Subtle border */
+  margin-top: 30px;
+  padding-top: 20px;
+  padding-bottom: 30px;
+  display: flex;
+  justify-content: space-between; /* Make copyright and links horizontal */
+  align-items: center;
+  font-size: 0.8rem;
+  color: #cbd5e1; /* Light gray */
+}
+
+.footer-bottom p {
+  margin: 0; /* Remove any margin from the copyright text */
+}
+
+.footer-bottom-links {
+  display: flex;
+  gap: 15px; /* Space between links */
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-bottom-links a {
+  color: #cbd5e1; /* Light gray */
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.footer-bottom-links a:hover {
+  color: #facc15; /* Yellow on hover */
+}
+
+/* Remove extra white space at the bottom */
+ body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Ensure full height for body and html */
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background-color: #0f172a; /* Match footer's background color */
+}
+
+#root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  flex-shrink: 0; /* Prevent footer from collapsing */
+}

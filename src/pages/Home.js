@@ -7,46 +7,15 @@ import PremiumTravelExperience from '../components/PremiumTravelExperience';
 import Footer from '../components/Footer'; // Import Footer
 import './Home.css';
 import { Link } from 'react-router-dom';
+import { getFeaturedCars } from '../data/cars';
+
 
 const Home = () => {
   const [cars, setCars] = useState([]);
 
   // Fetching cars (you can replace this with an API call later)
   useEffect(() => {
-    const fetchCars = async () => {
-      const dummyCars = [
-        {
-          id: 1,
-          name: 'Mercedes S-Class',
-          description: 'The pinnacle of luxury sedans, offering unmatched comfort for executive travel.',
-          passengers: 3,
-          luggage: 2,
-          price: 120,
-          image: 'https://via.placeholder.com/350x200?text=Mercedes+S-Class',
-        },
-        {
-          id: 2,
-          name: 'BMW 7 Series',
-          description: 'Blend of performance and luxury with spacious interior for business or leisure.',
-          passengers: 3,
-          luggage: 2,
-          price: 110,
-          image: 'https://via.placeholder.com/350x200?text=BMW+7+Series',
-        },
-        {
-          id: 3,
-          name: 'Cadillac Escalade',
-          description: 'Spacious luxury SUV perfect for group travel with ample luggage space.',
-          passengers: 6,
-          luggage: 4,
-          price: 150,
-          image: 'https://via.placeholder.com/350x200?text=Cadillac+Escalade',
-        },
-      ];
-      setCars(dummyCars);
-    };
-
-    fetchCars();
+    setCars(getFeaturedCars());
   }, []);
 
   return (

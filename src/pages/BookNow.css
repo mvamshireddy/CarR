@@ -60,26 +60,15 @@
   background-color: white;
 }
 
-/* Vehicles Container */
-.vehicles-container {
-  background: #f8f9fa;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.vehicle-selection .subtitle {
-  margin-bottom: 30px; /* Added space after subtitle */
-  font-size: 1rem;
-  color: #555;
-  text-align: center;
-}
-
+/* Vehicles List - Consistent Spacing Across Categories */
 .vehicles-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Ensure consistent column behavior */
+  gap: 20px; /* Consistent gap between cards */
+  justify-content: space-evenly; /* Distribute cards evenly, avoiding excess space */
+  align-items: stretch; /* Stretch items to match heights */
+  max-width: 1200px; /* Limit the grid's maximum width */
+  margin: 0 auto; /* Center the grid within the container */
 }
 
 /* Responsive Adjustments for Vehicles List */

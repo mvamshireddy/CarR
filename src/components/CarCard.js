@@ -1,10 +1,18 @@
-import React from 'react';
-import './CarCard.css';
-import { FaUser, FaSuitcase } from 'react-icons/fa';
+import React from "react";
+import { FaUser, FaSuitcase, FaCheckCircle } from "react-icons/fa";
+import "./CarCard.css";
 
-const CarCard = ({ car }) => {
+const CarCard = ({ car, isSelected, onSelect }) => {
   return (
-    <div className="car-card">
+    <div
+      className={`car-card ${isSelected ? "selected" : ""}`}
+      onClick={onSelect}
+    >
+      {isSelected && (
+        <div className="selected-tag">
+          <FaCheckCircle className="check-icon" /> Selected
+        </div>
+      )}
       <img src={car.image} alt={car.name} className="car-image" />
       <div className="car-details">
         <h3 className="car-name">{car.name}</h3>

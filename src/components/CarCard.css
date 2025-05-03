@@ -4,14 +4,44 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, border-color 0.2s ease-in-out;
   width: 350px;
   display: flex;
   flex-direction: column;
+  position: relative;
+  cursor: pointer;
 }
 
 .car-card:hover {
   transform: translateY(-5px);
+}
+
+.car-card.selected {
+  border: 2px solid #007bff; /* Bright blue border for selected cards */
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.5); /* Stronger shadow for selected cards */
+  transform: none; /* Disable hover transform for selected cards */
+}
+
+.car-card:hover:not(.selected) {
+  transform: translateY(-5px); /* Only apply hover transform to non-selected cards */
+}
+
+.selected-tag {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.check-icon {
+  font-size: 1rem;
 }
 
 .car-image {

@@ -49,7 +49,7 @@ const Testimonials = () => {
               </div>
               <p className="feedback">"{testimonial.feedback}"</p>
               <div className="testimonial-footer">
-                <img src={testimonial.image} alt={testimonial.name} className="client-avatar" />
+                <img src={"assests/images/test1.png"} alt={testimonial.name} className="client-avatar" />
                 <div>
                   <p className="client-name">{testimonial.name}</p>
                   <p className="client-role">{testimonial.role}</p>

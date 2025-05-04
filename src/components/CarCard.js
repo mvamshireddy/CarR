@@ -1,11 +1,13 @@
 import React from "react";
+import { Link } from 'react-router-dom'; 
 import { FaUser, FaSuitcase, FaCheckCircle } from "react-icons/fa";
 import "./CarCard.css";
+
 
 const CarCard = ({ car, isSelected, onSelect, hideBookNowButton }) => {
   // Add image error handling
   const handleImageError = (e) => {
-    e.target.src = "/assets/images/default-car.jpg"; // Fallback image
+    e.target.src = "/assests/images/default-car.jpg"; // Fallback image
   };
 
   return (
@@ -39,7 +41,7 @@ const CarCard = ({ car, isSelected, onSelect, hideBookNowButton }) => {
           <div className="car-price">${car.price}/hour</div>
           {/* Conditionally render the "Book Now" button */}
           {!hideBookNowButton && (
-            <button className="book-now-btn">Book Now</button>
+            <Link to="/booknow" className="book-now-btn">Book Now</Link>
           )}
         </div>
       </div>

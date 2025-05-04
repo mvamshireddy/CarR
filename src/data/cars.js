@@ -3,7 +3,7 @@ export const allCars = [
   {
     id: 1,
     name: "Mercedes S-Class",
-    image: "/assets/images/mercedes-s-class.png",
+    image: "/assests/images/mercedes-s-class.png",
     description: "The pinnacle of luxury sedans, offering unmatched comfort for executive travel.",
     price: 120,
     passengers: 3,
@@ -13,7 +13,7 @@ export const allCars = [
   {
     id: 2,
     name: "BMW 7 Series",
-    image: "/assets/images/bmw-7-series.png",
+    image: "/assests/images/bmw-7-series.png",
     description: "Blend of performance and luxury with spacious interior for business or leisure.",
     price: 110,
     passengers: 3,
@@ -22,8 +22,8 @@ export const allCars = [
   },
   {
     id: 4,
-    name: "Range Rover Autobiography",
-    image: "/assets/images/range-rover.png",
+    name: "Range Rover",
+    image: "/assests/images/range-rover.png",
     description: "The epitome of luxury SUVs, combining opulence with off-road capability.",
     price: 140,
     passengers: 4,
@@ -33,7 +33,7 @@ export const allCars = [
   {
     id: 3,
     name: "Cadillac Escalade",
-    image: "/assets/images/cadillac-escalade.png",
+    image: "/assests/images/cadillac-escalade.png",
     description: "Spacious luxury SUV perfect for group travel with ample luggage space.",
     price: 150,
     passengers: 6,
@@ -43,7 +43,7 @@ export const allCars = [
   {
     id: 5,
     name: "Mercedes V-Class",
-    image: "/assets/images/mercedes-v-class.png",
+    image: "/assests/images/mercedes-v-class.png",
     description: "Spacious luxury van for group travel with exceptional comfort.",
     price: 160,
     passengers: 5,
@@ -53,7 +53,7 @@ export const allCars = [
   {
     id: 6,
     name: "Rolls-Royce Phantom",
-    image: "/assets/images/rolls-royce.png",
+    image: "/assests/images/rolls-royce.png",
     description: "The ultimate symbol of prestige and luxury for special occasions.",
     price: 300,
     passengers: 3,

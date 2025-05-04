@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CarCard from "../components/CarCard"; // Import CarCard component
@@ -14,6 +14,16 @@ const BookNow = () => {
   const [cardNumber, setCardNumber] = useState(""); // Track card number input
   const [isBookingConfirmed, setIsBookingConfirmed] = useState(false); // Track if booking is confirmed
   const [bookingRef, setBookingRef] = useState(""); // Store booking reference number
+
+    // Pre-fill selectedCar from localStorage on load
+    useEffect(() => {
+      const storedCar = localStorage.getItem("selectedCar");
+      if (storedCar) {
+        setSelectedCar(JSON.parse(storedCar));
+        setActiveTab("details"); // Redirect to "Details" tab if car is pre-selected
+        localStorage.removeItem("selectedCar"); // Clear after use
+      }
+    }, []);
   
   // Function to handle card number validation and formatting
   const handleCardNumberChange = (e) => {

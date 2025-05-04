@@ -3,11 +3,19 @@ import { Link } from 'react-router-dom';
 import { FaUser, FaSuitcase, FaCheckCircle } from "react-icons/fa";
 import "./CarCard.css";
 
-
 const CarCard = ({ car, isSelected, onSelect, hideBookNowButton }) => {
   // Add image error handling
   const handleImageError = (e) => {
     e.target.src = "/assests/images/default-car.jpg"; // Fallback image
+  };
+
+  // Function to handle "Book Now" button click
+  const handleBookNowClick = () => {
+    // Save car data to localStorage
+    localStorage.setItem("selectedCar", JSON.stringify(car));
+
+    // Redirect to BookNow page with "Details" tab active
+    window.location.href = "/booknow?activeTab=details";
   };
 
   return (
@@ -41,7 +49,9 @@ const CarCard = ({ car, isSelected, onSelect, hideBookNowButton }) => {
           <div className="car-price">${car.price}/hour</div>
           {/* Conditionally render the "Book Now" button */}
           {!hideBookNowButton && (
-            <Link to="/booknow" className="book-now-btn">Book Now</Link>
+            <button onClick={handleBookNowClick} className="book-now-btn">
+              Book Now
+            </button>
           )}
         </div>
       </div>

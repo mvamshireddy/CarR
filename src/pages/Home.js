@@ -1,21 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Hero from '../components/Hero';
 import CarCard from '../components/CarCard';
 import HowItWorks from '../components/HowItWorks';
 import Testimonials from '../components/Testimonials';
 import PremiumTravelExperience from '../components/PremiumTravelExperience';
-import Footer from '../components/Footer'; // Import Footer
+import Footer from '../components/Footer';
 import './Home.css';
 import { Link } from 'react-router-dom';
-import { getFeaturedCars } from '../data/cars';
-
+import axios from 'axios';
 
 const Home = () => {
-  const [cars, setCars] = useState([]);
+  const [cars, setCars] = useState([]); // State to store cars
+  const [error, setError] = useState(null); // State to handle errors
 
-  // Fetching cars (you can replace this with an API call later)
+  // Fetching cars from the backend API
   useEffect(() => {
-    setCars(getFeaturedCars());
+    const fetchCars = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/api/cars');
+        setCars(response.data); // Set cars from response
+      } catch (err) {
+        console.error(err);
+        setError('Failed to fetch cars. Please try again later.');
+      }
+    };
+
+    fetchCars();
   }, []);
 
   return (
@@ -29,6 +39,7 @@ const Home = () => {
         <p className="home-description">
           Choose from our range of luxury vehicles, operated by professional chauffeurs.
         </p>
+        {error && <p className="error-message">{error}</p>} {/* Display error if any */}
         <div className="car-list">
           {cars.map((car) => (
             <CarCard key={car.id} car={car} />

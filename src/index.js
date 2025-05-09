@@ -1,17 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
+import ReactDOM from 'react-dom';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+// Load your public Stripe API key
+const stripePromise = loadStripe('pk_test_51RMmjDForJmgHw8j1YIFVDyE0ac4Y0fIXZCkBwyJWrU5sJ4yXrwwTEDRx8XiXovZgJzk0Lpz4BJ4Y8MvF8BFzZ1Q00lDtRRwIF'); // Replace with your actual public Stripe key
+
+ReactDOM.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <Elements stripe={stripePromise}>
+      <App />
+    </Elements>
+  </React.StrictMode>,
+  document.getElementById('root')
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import axios from 'axios';
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import CarCard from "../components/CarCard"; // Import CarCard component
@@ -14,6 +16,51 @@ const BookNow = () => {
   const [cardNumber, setCardNumber] = useState(""); // Track card number input
   const [isBookingConfirmed, setIsBookingConfirmed] = useState(false); // Track if booking is confirmed
   const [bookingRef, setBookingRef] = useState(""); // Store booking reference number
+  const stripe = useStripe();
+  const elements = useElements();
+  const [cardholderName, setCardholderName] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
+  
+
+  const handleStripePayment = async (event) => {
+    event.preventDefault();
+    setIsProcessing(true);
+  
+    if (!stripe || !elements) {
+      console.error("Stripe has not loaded yet.");
+      return;
+    }
+    try {
+      // Step 1: Request a Payment Intent from the backend
+      const { data } = await axios.post(
+        "http://localhost:5000/api/payments/create-payment-intent",
+        { amount: calculateTotalCost() },
+        { headers: { Authorization: `Bearer ${localStorage.getItem("token")}` } }
+      );
+  
+      // Step 2: Confirm the Card Payment
+      const result = await stripe.confirmCardPayment(data.clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: cardholderName,
+          },
+        },
+      });
+  
+      if (result.error) {
+        alert("Payment failed: " + result.error.message);
+      } else if (result.paymentIntent.status === "succeeded") {
+        alert("Payment successful! Your booking is confirmed.");
+        handleConfirmBooking(); // Proceed with booking confirmation
+      }
+    } catch (error) {
+      console.error("Error processing payment:", error.message);
+      alert("Payment failed. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
     // Pre-fill selectedCar from localStorage on load
     useEffect(() => {
@@ -416,143 +463,131 @@ const BookNow = () => {
           )}
 
           {/* Payment Page */}
-          {activeTab === "payment" && selectedCar && (
-            <div className="payment-details">
-              <h2>Payment & Confirmation</h2>
+{activeTab === "payment" && selectedCar && (
+  <div className="payment-details">
+    <h2>Payment & Confirmation</h2>
 
-              {/* Booking Summary Section */}
-              <div className="booking-summary">
-                <h3>Booking Summary</h3>
-                <div className="summary-car">
-                  <img src={selectedCar.image} alt={selectedCar.name} className="summary-car-img"  onError={(e) => e.target.src = "/assets/images/default-car.jpg"} />
-                  <h4 className="summary-car-name">{selectedCar.name}</h4>
-                </div>
-                <div className="summary-details">
-                  <div className="left-column">
-                    <p>
-                      <strong>Date:</strong> {bookingDetails.pickupStartDate}
-                    </p>
-                    <p>
-                      <strong>Duration:</strong> {calculateDurationInHours()} hours
-                    </p>
-                    <p>
-                      <strong>Pickup:</strong> {bookingDetails.pickupLocation}
-                    </p>
-                    <p>
-                      <strong>Drop-off:</strong> {bookingDetails.dropoffLocation}
-                    </p>
-                  </div>
-                  <div className="right-column">
-                    <p>
-                      <strong>Time:</strong> {bookingDetails.pickupStartTime} to {bookingDetails.dropoffEndTime}
-                    </p>
-                    <p>
-                      <strong>Passengers:</strong> {selectedCar.passengers}
-                    </p>
-                  </div>
-                </div>
-              </div>
+    {/* Booking Summary Section */}
+    <div className="booking-summary">
+      <h3>Booking Summary</h3>
+      <div className="summary-car">
+        <img
+          src={selectedCar.image}
+          alt={selectedCar.name}
+          className="summary-car-img"
+          onError={(e) => (e.target.src = "/assets/images/default-car.jpg")}
+        />
+        <h4 className="summary-car-name">{selectedCar.name}</h4>
+      </div>
+      <div className="summary-details">
+        <div className="left-column">
+          <p>
+            <strong>Date:</strong> {bookingDetails.pickupStartDate}
+          </p>
+          <p>
+            <strong>Duration:</strong> {calculateDurationInHours()} hours
+          </p>
+          <p>
+            <strong>Pickup:</strong> {bookingDetails.pickupLocation}
+          </p>
+          <p>
+            <strong>Drop-off:</strong> {bookingDetails.dropoffLocation}
+          </p>
+        </div>
+        <div className="right-column">
+          <p>
+            <strong>Time:</strong> {bookingDetails.pickupStartTime} to{" "}
+            {bookingDetails.dropoffEndTime}
+          </p>
+          <p>
+            <strong>Passengers:</strong> {selectedCar.passengers}
+          </p>
+        </div>
+      </div>
+    </div>
 
-              {/* Price Summary */}
-              <div className="price-summary">
-                <div>
-                  <span>Vehicle Rental ({calculateDurationInHours()} hours):</span>
-                  <span>${calculateRentalCost()}</span>
-                </div>
-                <div>
-                  <span>Service Fee:</span>
-                  <span>${SERVICE_FEE}</span>
-                </div>
-                <hr />
-                <div>
-                  <strong>Total:</strong>
-                  <strong>${calculateTotalCost()}</strong>
-                </div>
-              </div>
+    {/* Price Summary */}
+    <div className="price-summary">
+      <div>
+        <span>Vehicle Rental ({calculateDurationInHours()} hours):</span>
+        <span>${calculateRentalCost()}</span>
+      </div>
+      <div>
+        <span>Service Fee:</span>
+        <span>${SERVICE_FEE}</span>
+      </div>
+      <hr />
+      <div>
+        <strong>Total:</strong>
+        <strong>${calculateTotalCost()}</strong>
+      </div>
+    </div>
 
-              {/* Payment Method Selection */}
-              <label className="payment-method-label" htmlFor="paymentMethod">
-                Please select a payment method:
-              </label>
-              <select
-                id="paymentMethod"
-                className="payment-method-dropdown"
-                value={selectedPaymentMethod}
-                onChange={(e) => setSelectedPaymentMethod(e.target.value)}
-              >
-                <option value="creditCard">Credit Card</option>
-                <option value="upi">UPI</option>
-                <option value="bankTransfer">Bank Transfer</option>
-              </select>
+    {/* Payment Method Selection */}
+    <label className="payment-method-label" htmlFor="paymentMethod">
+      Please select a payment method:
+    </label>
+    <select
+      id="paymentMethod"
+      className="payment-method-dropdown"
+      value={selectedPaymentMethod}
+      onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+    >
+      <option value="creditCard">Credit Card</option>
+      <option value="upi">UPI</option>
+      <option value="bankTransfer">Bank Transfer</option>
+    </select>
 
-              {/* Render Credit Card Payment Form */}
-              {selectedPaymentMethod === "creditCard" && (
-                <form className="payment-form">
-                  <h3>Credit Card Payment</h3>
-                  <label>Cardholder Name</label>
-                  <input type="text" placeholder="Name as it appears on the card" />
-                  <label>Card Number</label>
-                  <input
-                    type="text"
-                    className="card-number-input"
-                    placeholder="1234 5678 9012 3456"
-                    value={cardNumber}
-                    onChange={handleCardNumberChange}
-                  />
-                  <div className="card-details">
-                    <label>
-                      Expiry Date
-                      <input
-                        type="text"
-                        placeholder="MM/YY"
-                        onChange={handleExpiryDateChange} // Attach the Expiry Date handler
-                        maxLength="5" // Limit input to 5 characters including "/"
-                      />
-                    </label>
-                    <label>
-                      CVV
-                      <input
-                        type="text"
-                        placeholder="123"
-                        onChange={handleCVVChange} // Attach the CVV handler
-                        maxLength="3" // Limit input to 3 characters
-                      />
-                    </label>
-                  </div>
-                </form>
-              )}
+    {/* Render Credit Card Payment Form */}
+    {selectedPaymentMethod === "creditCard" && (
+      <form className="payment-form" onSubmit={handleStripePayment}>
+        <h3>Credit Card Payment</h3>
+        <label>Cardholder Name</label>
+        <input
+          type="text"
+          placeholder="Name as it appears on the card"
+          value={cardholderName}
+          onChange={(e) => setCardholderName(e.target.value)}
+        />
+        <label>Card Details</label>
+        <CardElement />
+        <button
+          className="confirm-button"
+          disabled={isProcessing || !stripe || !elements}
+        >
+          {isProcessing ? "Processing..." : "Pay Now"}
+        </button>
+      </form>
+    )}
 
-              {/* Render UPI Payment Form */}
-              {selectedPaymentMethod === "upi" && (
-                <form className="payment-form">
-                  <h3>UPI Payment</h3>
-                  <label>UPI ID</label>
-                  <input type="text" placeholder="example@upi" />
-                </form>
-              )}
+    {/* Render UPI Payment Form */}
+    {selectedPaymentMethod === "upi" && (
+      <form className="payment-form">
+        <h3>UPI Payment</h3>
+        <label>UPI ID</label>
+        <input type="text" placeholder="example@upi" />
+      </form>
+    )}
 
-              {/* Render Bank Transfer Form */}
-              {selectedPaymentMethod === "bankTransfer" && (
-                <form className="payment-form">
-                  <h3>Bank Transfer</h3>
-                  <label>Bank Account Number</label>
-                  <input type="text" placeholder="Enter your bank account number" />
-                  <label>IFSC Code</label>
-                  <input type="text" placeholder="Enter IFSC code" />
-                </form>
-              )}
+    {/* Render Bank Transfer Form */}
+    {selectedPaymentMethod === "bankTransfer" && (
+      <form className="payment-form">
+        <h3>Bank Transfer</h3>
+        <label>Bank Account Number</label>
+        <input type="text" placeholder="Enter your bank account number" />
+        <label>IFSC Code</label>
+        <input type="text" placeholder="Enter IFSC code" />
+      </form>
+    )}
 
-              {/* Action Buttons */}
-              <div className="action-buttons">
-                <button className="cancel-button" onClick={() => handleTabClick("contact")}>
-                  Back
-                </button>
-                <button className="confirm-button" onClick={handleConfirmBooking}>
-                  Confirm Booking
-                </button>
-              </div>
-            </div>
-          )}
+    {/* Action Buttons */}
+    <div className="action-buttons">
+      <button className="cancel-button" onClick={() => handleTabClick("contact")}>
+        Back
+      </button>
+    </div>
+  </div>
+)}
 
           {/* Booking Confirmation Page */}
           {activeTab === "confirmed" && isBookingConfirmed && selectedCar && (

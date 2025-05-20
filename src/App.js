@@ -7,6 +7,9 @@ import Services from './pages/Services';
 import Vehicles from './pages/Vehicles';
 import Contact from './pages/Contact';
 import BookNow from './pages/BookNow'; 
+import BookingConfirmation from './pages/BookingConfirmation';
+import LoginPage from './pages/LoginPage';
+
 
 function App() {
   return (
@@ -19,6 +22,8 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/booknow" element={<BookNow />} /> {/* BookNow route */}
+        <Route path="/confirmation/:bookingRef" element={<BookingConfirmation />} /> {/* Booking confirmation route */}
+        <Route path="/login" element={<LoginPage />} /> {/* Login route */}
       </Routes>
     </Router>
   );

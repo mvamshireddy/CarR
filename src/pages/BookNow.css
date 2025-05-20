@@ -697,3 +697,67 @@
 .confirmation-page {
   animation: fadeIn 0.6s ease-out;
 }
+/* Add these styles to your BookNow.css file */
+
+.confirm-button.submitting {
+  background-color: #cccccc;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.confirm-button.submitting:after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  left: 35%;
+  margin-top: -10px;
+  margin-left: -10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s infinite linear;
+}
+
+.view-booking-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-booking-button:hover {
+  background-color: #218838;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media print {
+  .navbar, .footer, .confirmation-actions, .book-now-tabs {
+    display: none !important;
+  }
+  
+  .book-now-page {
+    padding: 0;
+    background-color: white;
+  }
+  
+  .confirmation-page {
+    padding: 0;
+  }
+  
+  body {
+    background-color: white;
+  }
+}

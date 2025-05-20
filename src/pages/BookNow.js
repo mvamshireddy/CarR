@@ -1,29 +1,32 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import CarCard from "../components/CarCard"; // Import CarCard component
+import CarCard from "../components/CarCard";
 import "./BookNow.css";
 import { allCars } from '../data/cars';
 
 const SERVICE_FEE = 25; // Fixed service fee
 
 const BookNow = () => {
+  const navigate = useNavigate(); // Initialize useNavigate hook
   const [activeTab, setActiveTab] = useState("vehicle");
   const [selectedCar, setSelectedCar] = useState(null); // Track selected car
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("creditCard"); // Default to Credit Card
   const [cardNumber, setCardNumber] = useState(""); // Track card number input
   const [isBookingConfirmed, setIsBookingConfirmed] = useState(false); // Track if booking is confirmed
   const [bookingRef, setBookingRef] = useState(""); // Store booking reference number
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track form submission state
 
-    // Pre-fill selectedCar from localStorage on load
-    useEffect(() => {
-      const storedCar = localStorage.getItem("selectedCar");
-      if (storedCar) {
-        setSelectedCar(JSON.parse(storedCar));
-        setActiveTab("details"); // Redirect to "Details" tab if car is pre-selected
-        localStorage.removeItem("selectedCar"); // Clear after use
-      }
-    }, []);
+  // Pre-fill selectedCar from localStorage on load
+  useEffect(() => {
+    const storedCar = localStorage.getItem("selectedCar");
+    if (storedCar) {
+      setSelectedCar(JSON.parse(storedCar));
+      setActiveTab("details"); // Redirect to "Details" tab if car is pre-selected
+      localStorage.removeItem("selectedCar"); // Clear after use
+    }
+  }, []);
   
   // Function to handle card number validation and formatting
   const handleCardNumberChange = (e) => {
@@ -56,7 +59,10 @@ const BookNow = () => {
 
   // Function to generate random booking reference
   const generateBookingRef = () => {
-    return `REF-${Math.floor(100000 + Math.random() * 900000)}`; // Random 6-digit reference
+    // Create a more sophisticated reference including timestamp
+    const timestamp = new Date().toISOString().replace(/[-:.TZ]/g, '').substring(0, 8);
+    const random = Math.floor(100000 + Math.random() * 900000); // Random 6-digit
+    return `REF-${timestamp}-${random}`;
   };
 
   // Function to format date for display
@@ -80,29 +86,80 @@ const BookNow = () => {
     });
   };
 
+  // Function to handle printing
+  const handlePrint = () => {
+    window.print();
+  };
+
   // Function to handle booking confirmation
-  const handleConfirmBooking = () => {
-    if (selectedPaymentMethod === "creditCard" && !cardNumber) {
-      alert("Please complete the credit card details before confirming the booking.");
-      return;
-    }
+  const handleConfirmBooking = async () => {
+    // Prevent multiple form submissions
+    if (isSubmitting) return;
+    setIsSubmitting(true);
 
-    if (selectedPaymentMethod === "upi" && !document.querySelector('input[placeholder="example@upi"]').value) {
-      alert("Please enter your UPI ID before confirming the booking.");
-      return;
-    }
+    try {
+      // Payment method validation
+      if (selectedPaymentMethod === "creditCard" && !cardNumber) {
+        alert("Please complete the credit card details before confirming the booking.");
+        setIsSubmitting(false);
+        return;
+      }
 
-    if (selectedPaymentMethod === "bankTransfer" && 
-        (!document.querySelector('input[placeholder="Enter your bank account number"]').value || 
-         !document.querySelector('input[placeholder="Enter IFSC code"]').value)) {
-      alert("Please complete the bank transfer details before confirming the booking.");
-      return;
-    }
+      if (selectedPaymentMethod === "upi" && !document.querySelector('input[placeholder="example@upi"]').value) {
+        alert("Please enter your UPI ID before confirming the booking.");
+        setIsSubmitting(false);
+        return;
+      }
 
-    const ref = generateBookingRef();
-    setBookingRef(ref); // Set the booking reference
-    setIsBookingConfirmed(true); // Mark booking as confirmed
-    setActiveTab("confirmed"); // Navigate to confirmation page
+      if (selectedPaymentMethod === "bankTransfer" && 
+          (!document.querySelector('input[placeholder="Enter your bank account number"]').value || 
+          !document.querySelector('input[placeholder="Enter IFSC code"]').value)) {
+        alert("Please complete the bank transfer details before confirming the booking.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Generate booking reference
+      const ref = generateBookingRef();
+      setBookingRef(ref);
+
+      // Create booking data object
+      const bookingData = {
+        bookingRef: ref,
+        car: selectedCar,
+        bookingDetails: bookingDetails,
+        contactDetails: contactDetails,
+        paymentMethod: selectedPaymentMethod,
+        totalCost: calculateTotalCost(),
+        serviceFee: SERVICE_FEE,
+        bookingDate: getCurrentDate(),
+        timestamp: new Date().toISOString() // Add exact timestamp for sorting/filtering
+      };
+
+      // If backend API is ready, you would send data to the backend here
+      // For now, save to localStorage
+      localStorage.setItem("confirmedBooking", JSON.stringify(bookingData));
+
+      // Mark booking as confirmed (for current page state)
+      setIsBookingConfirmed(true);
+      
+      // Option 1: Show confirmation tab in current page
+      //setActiveTab("confirmed");
+      
+      // Option 2: Navigate to dedicated confirmation page after a short delay
+      // This delay allows the user to see the "processing" state
+      setTimeout(() => {
+        navigate(`/confirmation/${ref}`);
+      }, 1500);
+
+      // In a real implementation, you would also handle error cases
+      // and provide appropriate feedback to the user
+    } catch (error) {
+      console.error("Error processing booking:", error);
+      alert("There was an error processing your booking. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const [bookingDetails, setBookingDetails] = useState({
@@ -113,6 +170,7 @@ const BookNow = () => {
     pickupLocation: "",
     dropoffLocation: "",
   });
+
   const [contactDetails, setContactDetails] = useState({
     fullName: "",
     email: "",
@@ -215,45 +273,45 @@ const BookNow = () => {
         </header>
 
         {activeTab !== "confirmed" && (
-  <div className="book-now-tabs">
-    <button
-      className={`tab ${activeTab === "vehicle" ? "active" : ""}`}
-      onClick={() => handleTabClick("vehicle")}
-      disabled={isBookingConfirmed}
-    >
-      Vehicle
-    </button>
-    <button
-      className={`tab ${activeTab === "details" ? "active" : ""}`}
-      onClick={() => handleTabClick("details")}
-      disabled={!selectedCar || isBookingConfirmed}
-    >
-      Details
-    </button>
-    <button
-      className={`tab ${activeTab === "contact" ? "active" : ""}`}
-      onClick={() => handleTabClick("contact")}
-      disabled={!isDetailsPageComplete() || isBookingConfirmed}
-    >
-      Contact
-    </button>
-    <button
-      className={`tab ${activeTab === "payment" ? "active" : ""}`}
-      onClick={() => handleTabClick("payment")}
-      disabled={!isContactPageComplete() || isBookingConfirmed}
-    >
-      Payment
-    </button>
-    {isBookingConfirmed && (
-      <button
-        className={`tab ${activeTab === "confirmed" ? "active" : ""}`}
-        onClick={() => handleTabClick("confirmed")}
-      >
-        Confirmed
-      </button>
-    )}
-  </div>
-)}
+          <div className="book-now-tabs">
+            <button
+              className={`tab ${activeTab === "vehicle" ? "active" : ""}`}
+              onClick={() => handleTabClick("vehicle")}
+              disabled={isBookingConfirmed}
+            >
+              Vehicle
+            </button>
+            <button
+              className={`tab ${activeTab === "details" ? "active" : ""}`}
+              onClick={() => handleTabClick("details")}
+              disabled={!selectedCar || isBookingConfirmed}
+            >
+              Details
+            </button>
+            <button
+              className={`tab ${activeTab === "contact" ? "active" : ""}`}
+              onClick={() => handleTabClick("contact")}
+              disabled={!isDetailsPageComplete() || isBookingConfirmed}
+            >
+              Contact
+            </button>
+            <button
+              className={`tab ${activeTab === "payment" ? "active" : ""}`}
+              onClick={() => handleTabClick("payment")}
+              disabled={!isContactPageComplete() || isBookingConfirmed}
+            >
+              Payment
+            </button>
+            {isBookingConfirmed && (
+              <button
+                className={`tab ${activeTab === "confirmed" ? "active" : ""}`}
+                onClick={() => handleTabClick("confirmed")}
+              >
+                Confirmed
+              </button>
+            )}
+          </div>
+        )}
 
         <div className="book-now-content">
           {/* Vehicle Selection Page */}
@@ -275,7 +333,7 @@ const BookNow = () => {
                 </div>
               </div>
               <div className="action-buttons">
-                <button className="cancel-button">Cancel</button>
+                <button className="cancel-button" onClick={() => navigate("/")}>Cancel</button>
                 <button
                   className="continue-button"
                   disabled={!selectedCar}
@@ -547,8 +605,12 @@ const BookNow = () => {
                 <button className="cancel-button" onClick={() => handleTabClick("contact")}>
                   Back
                 </button>
-                <button className="confirm-button" onClick={handleConfirmBooking}>
-                  Confirm Booking
+                <button 
+                  className={`confirm-button ${isSubmitting ? "submitting" : ""}`} 
+                  onClick={handleConfirmBooking}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Processing..." : "Confirm Booking"}
                 </button>
               </div>
             </div>
@@ -575,7 +637,7 @@ const BookNow = () => {
                   
                   <div className="summary-car">
                     <img src={selectedCar.image} alt={selectedCar.name} className="summary-car-img" 
-                     /* Add image error handling */ onError={(e) => e.target.src = "/assets/default-car.jpg"} />
+                     onError={(e) => e.target.src = "/assets/default-car.jpg"} />
                     <div className="summary-car-info">
                       <h4 className="summary-car-name">{selectedCar.name}</h4>
                       <p className="summary-car-category">{selectedCar.category}</p>
@@ -646,10 +708,16 @@ const BookNow = () => {
               </div>
               
               <div className="confirmation-actions">
-                <button className="print-button">
+                <button className="print-button" onClick={handlePrint}>
                   <i className="fas fa-print"></i> Print Receipt
                 </button>
-                <button className="home-button" onClick={() => window.location.href = "/"}>
+                <button 
+                  className="view-booking-button" 
+                  onClick={() => navigate(`/confirmation/${bookingRef}`)}
+                >
+                  View Booking Details
+                </button>
+                <button className="home-button" onClick={() => navigate("/")}>
                   Return to Home
                 </button>
               </div>

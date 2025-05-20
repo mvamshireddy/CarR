@@ -17,6 +17,7 @@ const Services = () => {
       ],
       buttonText: 'Book This Service',
       imageAlt: 'Executive Car Rental',
+      image: 'assests/images/excutive.png'
     },
     {
       title: 'Chauffeur Services',
@@ -31,6 +32,7 @@ const Services = () => {
       ],
       buttonText: 'Book This Service',
       imageAlt: 'Chauffeur Services',
+      image: 'assests/images/chauffeur-service.jpg'
     },
     {
       title: 'Corporate Fleet Management',
@@ -45,6 +47,7 @@ const Services = () => {
       ],
       buttonText: 'Book This Service',
       imageAlt: 'Corporate Fleet Management',
+      image: 'assests/images/excutive.png'
     },
     {
       title: 'Special Event Transportation',
@@ -59,6 +62,7 @@ const Services = () => {
       ],
       buttonText: 'Book This Service',
       imageAlt: 'Special Event Transportation',
+      image: 'assests/images/chauffeur-service.jpg'
     },
   ];
 
@@ -82,9 +86,13 @@ const Services = () => {
             }`}
             key={index}
           >
-            {/* Image Placeholder */}
+            {/* Image */}
             <div className="service-image-card">
-              <div className="service-image" aria-label={service.imageAlt}></div>
+              <div 
+                className="service-image" 
+                aria-label={service.imageAlt}
+                style={{ backgroundImage: `url(${process.env.PUBLIC_URL + service.image})` }}
+              ></div>
             </div>
 
             {/* Info Card */}

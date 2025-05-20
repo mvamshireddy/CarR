@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaBars, FaTimes, FaUser } from 'react-icons/fa';
 import './Navbar.css';
 
+
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -56,7 +57,9 @@ const Navbar = () => {
         {/* Book Now Button and User Icon for Desktop */}
         <div className="navbar-actions desktop-actions">
           <button className="btn-book-now">Book Now</button>
-          <FaUser className="user-icon" />
+          <Link to="/login">
+            <FaUser className="user-icon" />
+          </Link>
         </div>
 
         {/* Hamburger Menu Icon for Mobile */}
